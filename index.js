@@ -2,8 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const app = express();
-const stripe = require('stripe')(process.emitWarning.env.STRIPE_SECRET_KEY);
 require('dotenv').config();
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const port = process.env.port || 5000;
 
 // Middleware
@@ -199,20 +199,23 @@ async function run() {
 
     app.post('/create-payment-intent', async (req, res) => {
       const { price } = req.body;
-      const amount = parseInt(price * 100);
+      const amount = parseInt(price * 100); // price must be in cents
 
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount,
-        currency: 'usd',
-        payment_method_types: ['card']
-      });
+      try {
+        const paymentIntent = await stripe.paymentIntents.create({
+          amount: amount,
+          currency: 'usd',
+          payment_method_types: ['card'],
+        });
 
-      res.send({
-        clientSecret: paymentIntent.clientSecret
-      })
-    })
-
-
+        res.send({
+          clientSecret: paymentIntent.client_secret,
+        });
+      } catch (err) {
+        console.error('Error creating payment intent:', err);
+        res.status(500).send({ error: 'Failed to create payment intent' });
+      }
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
