@@ -218,7 +218,7 @@ async function run() {
       }
     });
 
-    app.post('/payments/:email', verifyToken, async (req, res) => {
+    app.get('/payments/:email', verifyToken, async (req, res) => {
       const query = { email: req.params.email };
       if (req.params.email !== req.decoded.email) {
         return res.status(403).send({ message: 'forbidden access ' })
@@ -240,6 +240,8 @@ async function run() {
       const deleteResult = await cartCollection.deleteMany(query);
       res.send({ paymentResult, deleteResult });
     })
+
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
