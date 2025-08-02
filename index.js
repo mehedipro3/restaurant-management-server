@@ -241,6 +241,22 @@ async function run() {
       res.send({ paymentResult, deleteResult });
     })
 
+    // stats or analytics
+
+    app.get('/admin-stats', async (req, res) => {
+      const users = await userCollection.estimatedDocumentCount();
+      const menuItem = await menuCollection.estimatedDocumentCount();
+      const orders = await paymentCollection.estimatedDocumentCount();
+
+      const payments = await paymentCollection.find().toArray();
+      const revenue = payments.reduce((total, payment) => total + payment.price, 0)
+      res.send({
+        users,
+        menuItem,
+        orders,
+        revenue
+      })
+    })
 
 
     // Send a ping to confirm a successful connection
