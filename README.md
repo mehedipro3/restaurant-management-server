@@ -1,6 +1,6 @@
 # Restaurant Management System 🍽️
 
-Live Demo: [restaurant-management-server-7ne1m155w.vercel.app]('https://restaurant-management-server-7ne1m155w.vercel.app/')
+Live Demo: 'https://restaurant-management-server-7ne1m155w.vercel.app/'
 
 ---
 
